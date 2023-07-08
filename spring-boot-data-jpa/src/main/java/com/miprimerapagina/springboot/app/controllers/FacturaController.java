@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +24,8 @@ import com.miprimerapagina.springboot.app.models.entity.Factura;
 import com.miprimerapagina.springboot.app.models.entity.ItemFactura;
 import com.miprimerapagina.springboot.app.models.entity.Producto;
 import com.miprimerapagina.springboot.app.models.service.IClienteService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/factura")
@@ -60,11 +64,26 @@ public class FacturaController {
 	
 	//Guardar la factura
 	@PostMapping("/form")
-	public String guardar(Factura factura,
+	public String guardar(@Valid Factura factura,
+			BindingResult result,
+			Model model,
 			@RequestParam(name="item_id[]", required = false) Long [] itemId,
 			@RequestParam(name="cantidad[]", required = false) Integer[] cantidad,
 			RedirectAttributes flash,
 			SessionStatus status) {
+		
+		//Si el BindingResult encuentra algún error, redirige al formulario
+		if(result.hasErrors()) {
+			model.addAttribute("titulo", "Crear Factura");
+			return "factura/form";
+		}
+		
+		//Preguntamos si la factura no tiene lineas
+		if(itemId == null || itemId.length == 0) {
+			model.addAttribute("titulo", "Crear Factura");
+			model.addAttribute("error", "Error: La factura NO puede no tener lineas!");
+			return "factura/form";
+		}
 		
 		//Iteramos cada linea y las agregamos a la factura
 		for(int i = 0; i < itemId.length; i++) {

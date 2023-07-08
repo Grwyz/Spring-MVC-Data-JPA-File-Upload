@@ -172,5 +172,10 @@ public class ClienteController {
 
 		return "redirect:/listar";
 	}
+	
+	@RequestMapping(value = "/bamboozle")
+	public String home() {
+		return "bamboozle";
+	}
 
 }
