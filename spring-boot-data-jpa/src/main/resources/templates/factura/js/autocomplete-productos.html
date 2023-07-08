@@ -49,9 +49,14 @@
 				}
 			});
 			
-		}
-		
-		);
+			
+			//Eliminamos el input de 'plantillaItemsFactura' antes de guardar la factura para que no la tome como otra linea
+			$("form").submit(function(){
+				$("#plantillaItemsFactura").remove();
+				return;
+			});
+			
+		});
 		
 		var itemsHelper = {
 			//Función para calcular el importe (Cantidad del producto * precio)
