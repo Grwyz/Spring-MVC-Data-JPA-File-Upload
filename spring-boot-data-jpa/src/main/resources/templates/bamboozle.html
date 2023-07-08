@@ -17,13 +17,25 @@
 
 
 <script type="text/javascript">
+  //Reproducir un audio cuando cargue la vista
   document.addEventListener('DOMContentLoaded', function() {
     var audio = document.getElementById('myAudio');
     audio.play();
   });
 </script>
 
-<script>
+<script type="text/javascript">
+  // Función para reducir el volumen del audio
+  function reducirVolumen() {
+    var audio = document.getElementById('myAudio'); // ID del elemento de audio
+    audio.volume = 0.1; // Establecer el volumen deseado (0.5 para la mitad del volumen)
+  }
+
+  // Llamar a la función de reducción de volumen al cargar la página
+  window.onload = reducirVolumen();
+</script>
+
+<script type="text/javascript">
   // Función para redirigir después de un intervalo de tiempo
   function redirigir() {
     setTimeout(function() {
@@ -34,5 +46,7 @@
   // Llamar a la función de redireccionamiento al cargar la página
   window.onload = redirigir();
 </script>
+
+
 
 </html>
