@@ -9,15 +9,19 @@
 		<div class="card bg-light">
 			<div class="card-header" th:text="${titulo}"></div>
 			<div class="card-body">
+			
+				<!-- Botón "Volver" -->
 				<h4 class="card-title">
 					<a class="btn btn-light btn-xs"
 						th:href="@{'/ver/' + ${factura.cliente.id}}"
 						th:text="'&laquo; Volver'"></a>
 				</h4>
-
+				
+				<!-- Formulario contenedor de la factura -->
 				<form th:action="@{/factura/form}" th:object="${factura}"
 					method="post">
-
+					
+					<!-- Label + input "Cliente" (input deshabilitado) -->
 					<div class="form-group row">
 						<label for="cliente" class="col-sm-2 col-form-label"
 							th:text="'Cliente'"></label>
@@ -27,7 +31,8 @@
 								class="form-control" disabled='disabled' />
 						</div>
 					</div>
-
+					
+					<!-- Label + input "Descripción" -->
 					<div class="form-group row">
 						<label for="descripcion" class="col-sm-2 col-form-label"
 							th:text="'Descripción'"></label>
@@ -36,6 +41,7 @@
 						</div>
 					</div>
 
+					<!-- Label + textarea "Observación" -->
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label" th:text="'Observación'"></label>
 						<div class="col-sm-6">
@@ -43,6 +49,7 @@
 						</div>
 					</div>
 
+					<!-- Label + input "buscar_producto (contiene petición asíncrona) -->
 					<div class="form-group row">
 						<label for="buscar_producto" class="col-sm-2 col-form-label"
 							th:text="'Buscar producto'"></label>
@@ -52,8 +59,10 @@
 						</div>
 					</div>
 
+					<!-- Tabla "items_factura" (Se llena de manera dinámica según resultados de la petición asíncrona) -->
 					<table th:replace="~{factura/plantilla-items :: itemsFactura}"></table>
 
+					<!-- Tabla "cargarItemProductos". Despliega los producos agregados a la factura -->
 					<table id="cargarItemProductos"
 						class="table table-sm table-striped table-hover">
 						<thead>
@@ -70,7 +79,8 @@
 					</table>
 						<!-- Gran total con valor por defecto en '0' -->
 						<h5>Total <span class="badge badge-secondary" id="gran_total">0</span></h5>
-
+					
+					<!-- Botón "Crear factura" -->
 					<div class="form-group row">
 						<div class="col-sm-6">
 							<input type="submit" th:value="${titulo}"

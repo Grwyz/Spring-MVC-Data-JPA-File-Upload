@@ -28,7 +28,8 @@
 					});
 				},
 				select: function(event, ui){
-					//$("#buscar_producto").val(ui.item.label);
+					// - $("#buscar_producto").val(ui.item.label);
+					//Si el producto ya fue agregado, incrementa en 1 la cantidad
 					if(itemsHelper.hasProducto(ui.item.value)){
 						itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio);
 						return false;
@@ -53,10 +54,12 @@
 		);
 		
 		var itemsHelper = {
+			//Función para calcular el importe (Cantidad del producto * precio)
 			calcularImporte: function(id, precio, cantidad){
 				$("#total_importe_" + id).html(parseInt(precio) * parseInt(cantidad));
 				this.calcularGranTotal();
 			},
+			//Función para saber si un producto ya fue agregado a la factura
 			hasProducto: function(id){
 				
 				var resultado = false;
@@ -68,6 +71,7 @@
 				
 				return resultado;
 			},
+			//Función para incrementar la cantidad de un producto de la factura
 			incrementaCantidad: function(id, precio){
 				var cantidad = $("#cantidad_" + id).val() ? parseInt($("#cantidad_" + id).val()) : 0;
 				$("#cantidad_" + id).val(++cantidad);
@@ -77,16 +81,16 @@
 				$("#row_" + id).remove();
 				this.calcularGranTotal();
 			},
-			<!-- Función para calcular el gran total de la factura -->
+			//Función para calcular el gran total de la factura
 			calcularGranTotal: function(){
 				var total = 0;
-				<!-- Iterar cada span que contenga el id: total_importe_" -->
+				//Iterar cada span que contenga el id: total_importe_
 				$('span[id^="total_importe_"]').each(function(){
 					
-					<!-- Obtenemos el total de cada importe con 'this.html()' y lo sumamos -->
+					//Obtenemos el total de cada importe con this.html() y lo sumamos
 					total += parseInt($(this).html());
 				});
-				<!-- Asignamos el total al span del formulario con el id: gran_total -->
+				//Asignamos el total al span del formulario con el id: gran_total
 				$('#gran_total').html(total);
 			}
 		}
