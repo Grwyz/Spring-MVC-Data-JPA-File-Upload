@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xml:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-	
+
 	<script type="text/javascript" th:fragment="javascript">
 		
 		$(document).ready(function(){
@@ -55,6 +55,7 @@
 		var itemsHelper = {
 			calcularImporte: function(id, precio, cantidad){
 				$("#total_importe_" + id).html(parseInt(precio) * parseInt(cantidad));
+				this.calcularGranTotal();
 			},
 			hasProducto: function(id){
 				
@@ -74,6 +75,19 @@
 			},
 			eliminarLineaFactura: function(id){
 				$("#row_" + id).remove();
+				this.calcularGranTotal();
+			},
+			<!-- Función para calcular el gran total de la factura -->
+			calcularGranTotal: function(){
+				var total = 0;
+				<!-- Iterar cada span que contenga el id: total_importe_" -->
+				$('span[id^="total_importe_"]').each(function(){
+					
+					<!-- Obtenemos el total de cada importe con 'this.html()' y lo sumamos -->
+					total += parseInt($(this).html());
+				});
+				<!-- Asignamos el total al span del formulario con el id: gran_total -->
+				$('#gran_total').html(total);
 			}
 		}
 		
