@@ -45,7 +45,7 @@ public class FacturaController {
 			RedirectAttributes flash) {
 		
 		//Obtenemos la factura a través del id
-		Factura factura = clienteService.findFacturaById(id);
+		Factura factura = clienteService.fetchFacturaByIdWithClienteWithItemFacturaWithProducto(id); //clienteService.findFacturaById(id);
 		
 		//Validamos que la factura no esté vacía
 		if(factura == null) {
