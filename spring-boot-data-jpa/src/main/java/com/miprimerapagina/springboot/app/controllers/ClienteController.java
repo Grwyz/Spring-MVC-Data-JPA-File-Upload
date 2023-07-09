@@ -85,7 +85,7 @@ public class ClienteController {
 	
 	//Método para listar los clientes (Usamos Pageable, Page<Cliente> y PageRender<Cliente>
 	//para mostrarlos en varias páginas)
-	@RequestMapping(value = "/listar", method = RequestMethod.GET)
+	@RequestMapping(value = {"/listar", "/", ""}, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		
 		//Elemento para especificar el número de clientes por página
