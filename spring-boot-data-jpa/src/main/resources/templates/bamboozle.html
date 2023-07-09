@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/layout :: head}"></head>
-<body>
 
-</body>
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
 
 <header th:replace="~{layout/layout :: header}"></header>
 <div align="justify">
@@ -11,42 +11,42 @@
 </div>
 
 <audio id="myAudio" controls>
-	<source src="/audio/mirage-bamboozle.mp3" type="audio/mp3">
+	<source src="/audio/mirage-bamboozle.mp3" type="audio/mp3" />
 	Tu navegador no soporta audio HTML5
 </audio>
 
 
 <script type="text/javascript">
-  //Reproducir un audio cuando cargue la vista
-  document.addEventListener('DOMContentLoaded', function() {
-    var audio = document.getElementById('myAudio');
-    audio.play();
-  });
+	//Reproducir un audio cuando cargue la vista
+	document.addEventListener('DOMContentLoaded', function () {
+		var audio = document.getElementById('myAudio');
+		audio.play();
+	});
 </script>
 
 <script type="text/javascript">
-  // Función para reducir el volumen del audio
-  function reducirVolumen() {
-    var audio = document.getElementById('myAudio'); // ID del elemento de audio
-    audio.volume = 0.1; // Establecer el volumen deseado (0.5 para la mitad del volumen)
-  }
+	// Función para reducir el volumen del audio
+	function reducirVolumen() {
+		var audio = document.getElementById('myAudio'); // ID del elemento de audio
+		audio.volume = 0.2; // Establecer el volumen deseado (0.5 para la mitad del volumen)
+	}
 
-  // Llamar a la función de reducción de volumen al cargar la página
-  window.onload = reducirVolumen();
+	// Llamar a la función de reducción de volumen al cargar la página
+	window.onload = reducirVolumen();
 </script>
 
 <script type="text/javascript">
-  // Función para redirigir después de un intervalo de tiempo
-  function redirigir() {
-    setTimeout(function() {
-      window.location.href = "listar"; // Ruta de la vista a la que deseas redirigir
-    }, 3000); // 3000 milisegundos = 3 segundos
-  }
+	// Función para redirigir después de un intervalo de tiempo
+	function redirigir() {
+		setTimeout(function () {
+			window.location.href = "listar"; // Ruta de la vista a la que deseas redirigir
+		}, 3000); // 3000 milisegundos = 3 segundos
+	}
 
-  // Llamar a la función de redireccionamiento al cargar la página
-  window.onload = redirigir();
+	// Llamar a la función de redireccionamiento al cargar la página
+	window.onload = redirigir();
 </script>
 
-
+</body>
 
 </html>
