@@ -32,10 +32,32 @@ import jakarta.validation.Valid;
 @SessionAttributes("factura")
 public class FacturaController {
 	
-	private final Logger log = LoggerFactory.getLogger(getClass());
-	
 	@Autowired
 	private IClienteService clienteService;
+	
+	private final Logger log = LoggerFactory.getLogger(getClass());
+	
+	//Método para ver la factura
+	@GetMapping("/ver/{id}")
+	public String ver(@PathVariable(value="id") Long id,
+			Model model,
+			RedirectAttributes flash) {
+		
+		//Obtenemos la factura a través del id
+		Factura factura = clienteService.findFacturaById(id);
+		
+		//Validamos que la factura no esté vacía
+		if(factura == null) {
+			flash.addFlashAttribute("error", "La factura no existe en la base de datos");
+			return "redirect:/listar";
+		}
+		
+		//Pasamos los datos a la vista
+		model.addAttribute("factura", factura);
+		model.addAttribute("titulo", "Factura: ".concat(factura.getDescripcion()));
+		
+		return "factura/ver";
+	}
 	
 	@GetMapping("/form/{clienteId}")
 	public String crear(@PathVariable(value="clienteId") Long clienteId, 
@@ -62,7 +84,7 @@ public class FacturaController {
 		return clienteService.findByName(term);
 	}
 	
-	//Guardar la factura
+	//Método para Guardar la factura
 	@PostMapping("/form")
 	public String guardar(@Valid Factura factura,
 			BindingResult result,
