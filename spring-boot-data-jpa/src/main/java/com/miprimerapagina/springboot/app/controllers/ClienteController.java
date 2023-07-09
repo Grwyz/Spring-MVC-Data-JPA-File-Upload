@@ -67,7 +67,7 @@ public class ClienteController {
 	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
 		//Encontramos al cliente con el método "findOne(id)"
-		Cliente cliente = clienteService.findOne(id);
+		Cliente cliente = clienteService.fetchByIdWithFacturas(id); //clienteService.findOne(id);
 		
 		//Validamos que el cliente no sea nulo
 		if (cliente == null) {
