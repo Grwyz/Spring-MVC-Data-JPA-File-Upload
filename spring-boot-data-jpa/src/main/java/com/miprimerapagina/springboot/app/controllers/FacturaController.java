@@ -32,6 +32,7 @@ import jakarta.validation.Valid;
 @SessionAttributes("factura")
 public class FacturaController {
 	
+	//Inyectamos las dependencias necesarias
 	@Autowired
 	private IClienteService clienteService;
 	
@@ -48,7 +49,9 @@ public class FacturaController {
 		
 		//Validamos que la factura no esté vacía
 		if(factura == null) {
+			//Mensaje - Indicamos que la factura no existe
 			flash.addFlashAttribute("error", "La factura no existe en la base de datos");
+			//Redirigimos a la vista "/listar"
 			return "redirect:/listar";
 		}
 		
@@ -56,26 +59,37 @@ public class FacturaController {
 		model.addAttribute("factura", factura);
 		model.addAttribute("titulo", "Factura: ".concat(factura.getDescripcion()));
 		
+		//Regresamos la vista "factura/ver"
 		return "factura/ver";
 	}
 	
+	//Método para crear la factura
 	@GetMapping("/form/{clienteId}")
 	public String crear(@PathVariable(value="clienteId") Long clienteId, 
 			Map<String, Object> model, 
 			RedirectAttributes flash) {
 		
+		//Buscamos al cliente
 		Cliente cliente = clienteService.findOne(clienteId);
+		
+		//Preguntamos si el cliente es nulo
 		if(cliente == null) {
+			//Mensaje - Indicamos que el cliente no existe
 			flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
+			//Redirigimos a la vista "/listar"
 			return "redirect:/listar";
 		}
 		
+		//Creamos un nuevo objeto del tipo "Factura"
 		Factura factura = new Factura();
+		//Asignamos un cliente a la factura
 		factura.setCliente(cliente);
 		
+		//Pasamos los elementos a la vista
 		model.put("factura", factura);
 		model.put("titulo", "Crear factura");
 		
+		//Regresamos la vista "factura/form"
 		return "factura/form";
 	}
 	
@@ -96,14 +110,20 @@ public class FacturaController {
 		
 		//Si el BindingResult encuentra algún error, redirige al formulario
 		if(result.hasErrors()) {
+			//Pasamos los elementos a la vista
 			model.addAttribute("titulo", "Crear Factura");
+			//Regresamos la vista "factura/form"
 			return "factura/form";
 		}
 		
 		//Preguntamos si la factura no tiene lineas
 		if(itemId == null || itemId.length == 0) {
+			
+			//Pasamos los elementos a la vista
 			model.addAttribute("titulo", "Crear Factura");
 			model.addAttribute("error", "Error: La factura NO puede no tener lineas!");
+			
+			//Regresamos la vista "factura/form"
 			return "factura/form";
 		}
 		
@@ -111,9 +131,13 @@ public class FacturaController {
 		for(int i = 0; i < itemId.length; i++) {
 			Producto producto = clienteService.findProductoById(itemId[i]);
 			
+			//Creamos un objeto del tipo ItemFactura
 			ItemFactura linea = new ItemFactura();
+			//Agregamos la cantidad a la linea
 			linea.setCantidad(cantidad[i]);
+			//Agregamos el producto a la linea
 			linea.setProducto(producto);
+			//Agregamos la linea a la factura
 			factura.addItemFactura(linea);
 			
 			log.info("ID: " + itemId[i].toString() + ", Cantidad: " + cantidad[i].toString());
@@ -121,11 +145,40 @@ public class FacturaController {
 		
 		//Guardamos la factura
 		clienteService.saveFactura(factura);
+		
+		//Establecemos el estatus de la transacción como "complete"
 		status.setComplete();
 		
+		//Mensaje - Indicamos que la factura fue creada con éxito
 		flash.addFlashAttribute("success", "Factura creada con éxito!");
 		
+		//Redirigimos a la vista "/ver/{id}"
 		return "redirect:/ver/" + factura.getCliente().getId();
+	}
+	
+	//Método para eliminar una factura
+	@GetMapping("/eliminar/{id}")
+	public String eliminar(@PathVariable(value="id") Long id, RedirectAttributes flash) {
+		
+		//Buscamos la factura a través del id
+		Factura factura = clienteService.findFacturaById(id);
+		
+		//Validamos que la factura no sea nula
+		if(factura != null) {
+			
+			//Eliminamos la factura
+			clienteService.deleteFactura(id);
+			//Mensaje - Indicamos que la factura ha sido eliminada
+			flash.addFlashAttribute("success", "Factura eliminada con éxito!");
+			//Redirigimos a la vista "/ver/{id}"
+			return "redirect:/ver/" + factura.getCliente().getId();
+		}
+		//Mensaje - Si la factura es nula, muestra un mensaje indicando que no existe.
+		flash.addFlashAttribute("error", "La factura no existe en la base de datos, no se pudo eliminar");
+		
+		//Redirigimos a la vista "/listar"
+		return "redirect:/listar";
+		
 	}
 
 }
