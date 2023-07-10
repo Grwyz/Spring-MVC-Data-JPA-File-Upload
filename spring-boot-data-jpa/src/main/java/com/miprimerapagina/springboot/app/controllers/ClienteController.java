@@ -19,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +38,7 @@ import com.miprimerapagina.springboot.app.models.service.IClienteService;
 import com.miprimerapagina.springboot.app.models.service.IUploadFileService;
 import com.miprimerapagina.springboot.app.util.paginator.PageRender;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
@@ -97,7 +99,8 @@ public class ClienteController {
 	//para mostrarlos en varias páginas)
 	@RequestMapping(value = {"/listar", "/", ""}, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
-			Authentication authentication) {
+			Authentication authentication,
+			HttpServletRequest request) {
 		
 		//Validamos que el objeto "authentication" no sea nulo
 		if(authentication != null) {
@@ -116,6 +119,22 @@ public class ClienteController {
 			logger.info("Hola, ".concat(auth.getName()).concat(". Tienes acceso!"));
 		} else {
 			logger.info("Hola, ".concat(auth.getName()).concat(". NO Tienes acceso!"));
+		}
+		
+		//Alternativa para chequear autorización: Método SecurityContextHolderAwareRequestWrapper
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "");
+		
+		if(securityContext.isUserInRole("ROLE_ADMIN")) {
+			logger.info("(Usando forma SecurityContextHolderAwareRequestWrapper) Hola, ".concat(auth.getName()).concat(". Tienes acceso!"));
+		} else {
+			logger.info("(Usando forma SecurityContextHolderAwareRequestWrapper) Hola, ".concat(auth.getName()).concat(". NO Tienes acceso!"));
+		}
+		
+		//Alternativa para chequear autorización: Método HttpServletRequest (Forma nativa)
+		if(request.isUserInRole("ROLE_ADMIN")) {
+			logger.info("(Usando forma HttpServletRequest) Hola, ".concat(auth.getName()).concat(". Tienes acceso!"));
+		} else {
+			logger.info("(Usando forma HttpServletRequest) Hola, ".concat(auth.getName()).concat(". NO Tienes acceso!"));
 		}
 		
 		//Elemento para especificar el número de clientes por página
