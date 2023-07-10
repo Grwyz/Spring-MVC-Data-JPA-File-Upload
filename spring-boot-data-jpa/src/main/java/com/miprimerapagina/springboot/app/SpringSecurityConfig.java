@@ -3,6 +3,7 @@ package com.miprimerapagina.springboot.app;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +14,7 @@ import com.miprimerapagina.springboot.app.auth.handler.LoginSuccessHandler;
 
 import org.springframework.security.core.userdetails.User;
 
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
 public class SpringSecurityConfig {
 	
@@ -53,10 +55,12 @@ public class SpringSecurityConfig {
 					.requestMatchers("/", "/css/**", "/js/**", "/images/**", "/listar").permitAll()
 					// Todos aquellos quienes tengan el rol "USER" o superior podrán acceder a estas
 					// vistas
-					.requestMatchers("/uploads/**").hasAnyRole("USER").requestMatchers("/ver/**").hasRole("USER")
+					/*.requestMatchers("/uploads/**").hasAnyRole("USER")*/
+					/*.requestMatchers("/ver/**").hasRole("USER")*/
 					// Solo aquellos que tengan el rol "ADMIN" podrán acceder a estas vistas
-					.requestMatchers("/factura/**").hasRole("ADMIN").requestMatchers("/form/**").hasRole("ADMIN")
-					.requestMatchers("/eliminar/**").hasRole("ADMIN")
+					/*.requestMatchers("/factura/**").hasRole("ADMIN")*/
+					/*.requestMatchers("/form/**").hasRole("ADMIN")*/
+					/*.requestMatchers("/eliminar/**").hasRole("ADMIN")*/
 					// Cualquier petición deberá ser autenticada
 					.anyRequest().authenticated())
 					// Cualquier persona puede acceder a la vista para iniciar sesión
