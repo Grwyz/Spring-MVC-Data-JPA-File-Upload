@@ -34,63 +34,64 @@ public class SpringSecurityConfig {
 
 		return manager;
 	}
-	
-	
-	//Método que configura las reglas de autorización y autenticación
+
+	// Método que configura las reglas de autorización y autenticación
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) {
-		//Todo se envuelve en un bloque "try-catch" en caso de haber algún error durante la configuración
-	    try {
-	        http
-	            .authorizeHttpRequests((authz) -> authz
-	            	//Todos pueden acceder a la vista principal
-	                .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/listar").permitAll()
-	                //Todos aquellos quienes tengan el rol "USER" o superior podrán acceder a estas vistas
-	                .requestMatchers("/uploads/**").hasAnyRole("USER")
-	                .requestMatchers("/ver/**").hasRole("USER")
-	                //Solo aquellos que tengan el rol "ADMIN" podrán acceder a estas vistas
-	                .requestMatchers("/factura/**").hasRole("ADMIN")
-	                .requestMatchers("/form/**").hasRole("ADMIN")
-	                .requestMatchers("/eliminar/**").hasRole("ADMIN")
-	                //Cualquier petición deberá ser autenticada
-	                .anyRequest().authenticated()
-	            )
-	            //Cualquier persona puede acceder a la vista para iniciar sesión
-	            .formLogin((formLogin) -> formLogin
-	                .loginPage("/login").permitAll()
-	            )
-	            //Cualquier persona que haya iniciado sesión puede acceder a la vista para cerrar sesión
-	            .logout((logout) -> logout
-	                .permitAll()
-	            );
-	        
-	        //Construye la configuración de las reglas de autorización y autenticación
-	        return http.build();
-	    } catch (Exception e) {
-	        // Manejar la excepción aquí
-	        e.printStackTrace();
-	        // Realizar cualquier otra acción necesaria, como lanzar una excepción personalizada o registrar el error
-	        return null; // Otra opción de manejo de excepción, retorna null o un valor predeterminado en caso de error
-	    }
+		// Todo se envuelve en un bloque "try-catch" en caso de haber algún error
+		// durante la configuración
+		try {
+			http.authorizeHttpRequests((authz) -> authz
+					// Todos pueden acceder a la vista principal
+					.requestMatchers("/", "/css/**", "/js/**", "/images/**", "/listar").permitAll()
+					// Todos aquellos quienes tengan el rol "USER" o superior podrán acceder a estas
+					// vistas
+					.requestMatchers("/uploads/**").hasAnyRole("USER").requestMatchers("/ver/**").hasRole("USER")
+					// Solo aquellos que tengan el rol "ADMIN" podrán acceder a estas vistas
+					.requestMatchers("/factura/**").hasRole("ADMIN").requestMatchers("/form/**").hasRole("ADMIN")
+					.requestMatchers("/eliminar/**").hasRole("ADMIN")
+					// Cualquier petición deberá ser autenticada
+					.anyRequest().authenticated())
+					// Cualquier persona puede acceder a la vista para iniciar sesión
+					.formLogin((formLogin) -> formLogin.loginPage("/login").permitAll())
+					// Cualquier persona que haya iniciado sesión puede acceder a la vista para
+					// cerrar sesión
+					.logout((logout) -> logout.permitAll())
+					
+					// Manejo de excepciones de acceso denegado
+					.exceptionHandling((exceptionHandling) -> exceptionHandling
+							.accessDeniedHandler((request, response, accessDeniedException) -> {
+								//Redirigimos a una página de error personalizada
+								response.sendRedirect("/error_403");
+							}));
+
+			// Construye la configuración de las reglas de autorización y autenticación
+			return http.build();
+		} catch (Exception e) {
+			// Manejar la excepción aquí
+			e.printStackTrace();
+			// Realizar cualquier otra acción necesaria, como lanzar una excepción
+			// personalizada o registrar el error
+			return null; // Otra opción de manejo de excepción, retorna null o un valor predeterminado en
+							// caso de error
+		}
 	}
-	
+
 	/*
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((authz) -> {
-			try {
-				authz.requestMatchers("/", "/css/**", "/js/**", "/images/**", "/listar").permitAll()
-						.requestMatchers("/uploads/**").hasAnyRole("USER").requestMatchers("/ver/**").hasRole("USER")
-						.requestMatchers("/factura/**").hasRole("ADMIN").requestMatchers("/form/**").hasRole("ADMIN")
-						.requestMatchers("/eliminar/**").hasRole("ADMIN").anyRequest().authenticated();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+	 * @Bean public SecurityFilterChain filterChain(HttpSecurity http) throws
+	 * Exception { http.authorizeHttpRequests((authz) -> { try {
+	 * authz.requestMatchers("/", "/css/**", "/js/**", "/images/**",
+	 * "/listar").permitAll()
+	 * .requestMatchers("/uploads/**").hasAnyRole("USER").requestMatchers("/ver/**")
+	 * .hasRole("USER")
+	 * .requestMatchers("/factura/**").hasRole("ADMIN").requestMatchers("/form/**").
+	 * hasRole("ADMIN")
+	 * .requestMatchers("/eliminar/**").hasRole("ADMIN").anyRequest().authenticated(
+	 * ); } catch (Exception e) { e.printStackTrace(); } });
+	 * 
+	 * return http.build();
+	 * 
+	 * }
+	 */
 
-		return http.build();
-
-	}
-	*/
-	
 }
