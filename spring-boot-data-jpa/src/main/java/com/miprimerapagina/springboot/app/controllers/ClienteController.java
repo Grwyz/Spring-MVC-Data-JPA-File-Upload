@@ -2,6 +2,7 @@ package com.miprimerapagina.springboot.app.controllers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -14,6 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -106,6 +110,12 @@ public class ClienteController {
 		//Validamos que el objeto "auth" no sea nulo
 		if(auth != null) {
 			logger.info("(Utilizando forma estática: SecurityContextHolder.getContext().getAuthentication()) Hola, usuario autenticado. Tu username es: ".concat(auth.getName()));
+		}
+		
+		if(hasRole("ROLE_ADMIN")) {
+			logger.info("Hola, ".concat(auth.getName()).concat(". Tienes acceso!"));
+		} else {
+			logger.info("Hola, ".concat(auth.getName()).concat(". NO Tienes acceso!"));
 		}
 		
 		//Elemento para especificar el número de clientes por página
@@ -254,6 +264,47 @@ public class ClienteController {
 	public String home() {
 		//Regresamos la vista "bamboozle"
 		return "bamboozle";
+	}
+	
+	//Método para validar si el usuario tiene un role determinado
+	private boolean hasRole(String role) {
+		
+		//Obtenemos el SecurityContext
+		SecurityContext context = SecurityContextHolder.getContext();
+		
+		//Si el SecurityContext es nulo, el usuario no tiene ningún role
+		if(context == null) {
+			return false;
+		}
+		
+		//Obtenemos la autenticación
+		Authentication auth = context.getAuthentication();
+		
+		//Si no hay ninguna autenticación, el usuario no tiene ningún role
+		if(auth == null) {
+			return false;
+		}
+		
+		//Toda clase role o que represente un role tiene que implementar la interfaz "GrantedAuthority"
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		
+		
+		//Forma simplificada de la validación: El usuario tiene un role
+		return authorities.contains(new SimpleGrantedAuthority(role));
+		
+		/*
+		//Iteramos cada uno de los roles que tenemos para ver si coincide con el rol que recibimos por parte del argumento
+		
+		  for(GrantedAuthority authority: authorities) {
+		 
+			if(role.equals(authority.getAuthority())) {
+				logger.info("Hola, ".concat(auth.getName()).concat(". Tu role es: ").concat(authority.getAuthority()));
+				return true;
+			}
+		}
+		
+		return false;
+		*/
 	}
 
 }
