@@ -57,7 +57,7 @@ public class SpringSecurityConfig {
 	            )
 	            //Cualquier persona puede acceder a la vista para iniciar sesión
 	            .formLogin((formLogin) -> formLogin
-	                .permitAll()
+	                .loginPage("/login").permitAll()
 	            )
 	            //Cualquier persona que haya iniciado sesión puede acceder a la vista para cerrar sesión
 	            .logout((logout) -> logout
