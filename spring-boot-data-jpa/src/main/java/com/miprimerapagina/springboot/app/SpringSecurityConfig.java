@@ -1,5 +1,6 @@
 package com.miprimerapagina.springboot.app;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,10 +8,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.miprimerapagina.springboot.app.auth.handler.LoginSuccessHandler;
+
 import org.springframework.security.core.userdetails.User;
 
 @Configuration
 public class SpringSecurityConfig {
+	
+	@Autowired
+	private LoginSuccessHandler successHandler;
 
 	// Registramos nuestro "passwordEncoder" como un componente de Spring (lo
 	// utilizamos para codificar las contraseñas)
@@ -53,7 +60,7 @@ public class SpringSecurityConfig {
 					// Cualquier petición deberá ser autenticada
 					.anyRequest().authenticated())
 					// Cualquier persona puede acceder a la vista para iniciar sesión
-					.formLogin((formLogin) -> formLogin.loginPage("/login").permitAll())
+					.formLogin((formLogin) -> formLogin.successHandler(successHandler).loginPage("/login").permitAll())
 					// Cualquier persona que haya iniciado sesión puede acceder a la vista para
 					// cerrar sesión
 					.logout((logout) -> logout.permitAll())
