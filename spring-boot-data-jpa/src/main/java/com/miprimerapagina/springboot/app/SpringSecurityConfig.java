@@ -20,13 +20,10 @@ public class SpringSecurityConfig {
 	
 	@Autowired
 	private LoginSuccessHandler successHandler;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
-	// Registramos nuestro "passwordEncoder" como un componente de Spring (lo
-	// utilizamos para codificar las contraseñas)
-	@Bean
-	public static BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 
 	@Bean
 	public UserDetailsService userDetailsService() throws Exception {
@@ -36,10 +33,10 @@ public class SpringSecurityConfig {
 		// Creamos dos nuevos usuarios: Uno con el rol "USER" y otro con los roles
 		// "USER" y "ADMIN"
 		manager.createUser(
-				User.withUsername("miguel").password(passwordEncoder().encode("12345")).roles("USER").build());
+				User.withUsername("miguel").password(this.passwordEncoder.encode("12345")).roles("USER").build());
 
 		manager.createUser(
-				User.withUsername("admin").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
+				User.withUsername("admin").password(this.passwordEncoder.encode("admin")).roles("ADMIN", "USER").build());
 
 		return manager;
 	}
