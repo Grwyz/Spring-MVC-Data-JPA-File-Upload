@@ -1,11 +1,8 @@
 package com.miprimerapagina.springboot.app;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.miprimerapagina.springboot.app.auth.handler.LoginSuccessHandler;
+import com.miprimerapagina.springboot.app.models.service.JpaUserDetailsService;
 
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
@@ -24,8 +22,14 @@ public class SpringSecurityConfig {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	//Inyectamos la clase de servicio
 	@Autowired
-	private DataSource dataSource;
+	private JpaUserDetailsService userDetailService;
+
+	@Autowired
+	public void userDetailsService(AuthenticationManagerBuilder build) throws Exception {
+		build.userDetailsService(userDetailService).passwordEncoder(passwordEncoder);
+	}
 
 	// Método que configura las reglas de autorización y autenticación
 	@Bean
@@ -36,16 +40,7 @@ public class SpringSecurityConfig {
 			http.authorizeHttpRequests((authz) -> authz
 					// Todos pueden acceder a la vista principal
 					.requestMatchers("/", "/css/**", "/js/**", "/images/**", "/listar").permitAll()
-					/*
-					 * // Todos aquellos quienes tengan el rol "USER" o superior podrán acceder a
-					 * estas // vistas .requestMatchers("/uploads/**").hasAnyRole("USER")
-					 * .requestMatchers("/ver/**").hasRole("USER") // Solo aquellos que tengan el
-					 * rol "ADMIN" podrán acceder a estas vistas
-					 * .requestMatchers("/factura/**").hasRole("ADMIN")
-					 * .requestMatchers("/form/**").hasRole("ADMIN")
-					 * .requestMatchers("/eliminar/**").hasRole("ADMIN") // Cualquier petición
-					 * deberá ser autenticada
-					 */
+					// Cualquier petición deberá ser autenticada
 					.anyRequest().authenticated())
 					// Cualquier persona puede acceder a la vista para iniciar sesión
 					.formLogin((formLogin) -> formLogin.successHandler(successHandler).loginPage("/login").permitAll())
@@ -71,22 +66,5 @@ public class SpringSecurityConfig {
 							// caso de error
 		}
 	}
-
-	// USO DE UN MÉTODO DEPRECADO - REVISAR Y ACTUALIZAR
-	@Bean
-	AuthenticationManager authManager(HttpSecurity http) throws Exception {
-		return http.getSharedObject(AuthenticationManagerBuilder.class).jdbcAuthentication().dataSource(dataSource)
-				.passwordEncoder(passwordEncoder)
-				.usersByUsernameQuery("select username, password, enabled from users where username=?")
-				.authoritiesByUsernameQuery(
-						"select u.username, a.authority from authorities a inner join users u on (a.user_id=u.id) where u.username=?")
-				.and().build();
-	}
-	
-	/* Enlaces de interés:
-	 * https://es.stackoverflow.com/questions/597594/cuál-es-la-alternativa-a-la-función-and-que-aparece-como-deprecated
-	 * https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/SecurityConfigurerAdapter.html#and()
-	 * https://spring.io/blog/2019/11/21/spring-security-lambda-dsl
-	*/
 
 }
