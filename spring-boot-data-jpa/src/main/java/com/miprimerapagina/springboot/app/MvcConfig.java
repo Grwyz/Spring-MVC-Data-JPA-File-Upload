@@ -53,7 +53,7 @@ public class MvcConfig implements WebMvcConfigurer{
 		public LocaleResolver localeResolver() {
 			SessionLocaleResolver localeResolver = new SessionLocaleResolver();
 			localeResolver.setDefaultLocale(new Locale("es", "ES"));
-			return localeResolver();
+			return localeResolver;
 		}
 		
 		//Método interceptor para cambiar el idioma de la página cada que se pase el parámetro "lang" por URL
