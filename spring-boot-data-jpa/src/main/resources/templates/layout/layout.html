@@ -21,37 +21,59 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav">
-						<li class="nav-item"><a class="nav-link" aria-current="page" th:href="@{/bamboozle}">Home</a>
+						<li class="nav-item"><a class="nav-link" aria-current="page" th:href="@{/bamboozle}"  th:text="#{text.layout.inicio}">Home</a>
 						</li>
-						<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
+						<li class="nav-item"><a class="nav-link" th:href="@{/listar}" th:text="#{text.layout.clientes}">Clientes</a>
 						</li>
 					</ul>
 					<ul class="navbar-nav ml-auto">
 						<li sec:authorize="!isAuthenticated()"><a class="btn btn-outline-primary"
-								th:href="@{/login}">Sign In</a></li>
+								th:href="@{/login}" th:text="#{text.layout.iniciarSesion}">Sign In</a></li>
 
 						<li sec:authorize="isAuthenticated()" class="dropdown">
 							<a class="btn btn-outline-primary dropdown-toggle" href="#" role="button"
-								data-bs-toggle="dropdown" aria-expanded="false">
+								id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
 								<span sec:authentication="name"></span>
 							</a>
 
-							<div class="dropdown-menu">
-
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuLunk">
 								<form id="logoutForm" th:action="@{/logout}" method="post">
 									<button class="dropdown-item"
-										onclick="document.getElementById('logoutForm').submit();" type="submit">Sign
+										onclick="document.getElementById('logoutForm').submit();" type="submit"
+										th:text="#{text.layout.cerrarSesion}">Sign
 										Out</button>
 								</form>
 
 							</div>
 						</li>
 					</ul>
-					
+
 					<ul class="navbar-nav navbar-right mx-4">
-						<li class="nav-item mx-1"> <a class="btn btn-outline-success" th:href="@{/locale(lang=es_ES)}">ES</a></li>
-						<li class="nav-item mx-1"> <a class="btn btn-outline-success" th:href="@{/locale(lang=en_US)}">EN</a></li>
-						<li class="nav-item mx-1"> <a class="btn btn-outline-success" th:href="@{/locale(lang=de_DE)}">DE</a></li>
+						<!-- Botones idioma (horizontal) -->
+						<!--<li class="nav-item mx-1"> <a class="btn btn-outline-success"
+								th:href="@{/locale(lang=es_ES)}">ES</a></li>
+						<li class="nav-item mx-1"> <a class="btn btn-outline-success"
+								th:href="@{/locale(lang=en_US)}">EN</a></li>
+						<li class="nav-item mx-1"> <a class="btn btn-outline-success"
+								th:href="@{/locale(lang=de_DE)}">DE</a></li> -->
+
+						<!-- Botones idioma (desplegables) -->
+						<li class="nav-item dropdown show mx-2">
+							<a class="btn btn-outline-primary dropdown-toggle" href="#" role="button"
+								id="dropdownLanguage" data-bs-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								<span th:text="#{text.locale.language}"></span></a>
+
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuLunk">
+								<a class="dropdown-item" th:href="@{/locale(lang=es_ES)}"
+									th:text="#{text.locale.es}">ES</a>
+								<a class="dropdown-item" th:href="@{/locale(lang=en_US)}"
+									th:text="#{text.locale.en}">EN</a>
+								<a class="dropdown-item" th:href="@{/locale(lang=de_DE)}"
+									th:text="#{text.locale.de}">DE</a>
+							</div>
+						</li>
 					</ul>
 
 				</div>
