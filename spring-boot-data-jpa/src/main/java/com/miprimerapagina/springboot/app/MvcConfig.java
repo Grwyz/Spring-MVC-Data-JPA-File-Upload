@@ -1,5 +1,7 @@
 package com.miprimerapagina.springboot.app;
 
+import java.util.Locale;
+
 import org.springframework.context.annotation.Bean;
 
 //import java.nio.file.Paths;
@@ -8,9 +10,13 @@ import org.springframework.context.annotation.Bean;
 //import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 //import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer{
@@ -41,5 +47,31 @@ public class MvcConfig implements WebMvcConfigurer{
 		public static BCryptPasswordEncoder passwordEncoder() {
 			return new BCryptPasswordEncoder();
 		}
+		
+		//Método para guardar el objeto "localeResolver" con nuestra nacionalización (el idioma por defecto de la página)
+		@Bean
+		public LocaleResolver localeResolver() {
+			SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+			localeResolver.setDefaultLocale(new Locale("es", "ES"));
+			return localeResolver();
+		}
+		
+		//Método interceptor para cambiar el idioma de la página cada que se pase el parámetro "lang" por URL
+		@Bean
+		public LocaleChangeInterceptor localeChangeInterceptor() {
+			LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
+			localeInterceptor.setParamName("lang");
+			return localeInterceptor;
+			
+		}
+
+		//Registramos el interceptor en nuestra aplicación
+		@Override
+		public void addInterceptors(InterceptorRegistry registry) {
+			// TODO Auto-generated method stub
+			registry.addInterceptor(localeChangeInterceptor());
+		}
+		
+		
 	
 }
