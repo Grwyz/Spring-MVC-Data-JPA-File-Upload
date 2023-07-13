@@ -10,11 +10,10 @@
 	<div class="container py-4">
 
 		<div class="card bg-danger text-white">
-			<div class="card-header">Error: Acceso denegado!</div>
+			<div class="card-header" th:text="#{text.security.error.403.titulo}">Acceso denegado!</div>
 			<div class="card-body">
-				<h5 class="card-title">El usuario: <span sec:authentication="name"></span> - NO tiene
-					permisos para acceder a este recurso.</h5>
-				<a th:href="@{/listar}" class="btn btn-outline-light" role="button">Ir a inicio</a>
+				<h5 class="card-title" th:utext="#{text.security.error.403.permiso(${#authentication.name})}"></h5>
+				<a th:href="@{/listar}" class="btn btn-outline-light" role="button" th:text="#{text.security.error.403.volver}">Ir a inicio</a>
 			</div>
 		</div>
 

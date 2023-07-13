@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class LocaleController {
 	
-	@GetMapping(value="/locale")
+	@GetMapping("/locale")
 	public String locale(HttpServletRequest request) {
 		String ultimaUrl = request.getHeader("referer");
 		

@@ -14,7 +14,7 @@
 				<h4 class="card-title">
 					<a class="btn btn-light btn-xs"
 						th:href="@{'/ver/' + ${factura.cliente.id}}"
-						th:text="'&laquo; Volver'"></a>
+						th:utext="#{text.global.volver}"></a>
 				</h4>
 				
 				<!-- Formulario contenedor de la factura -->
@@ -24,7 +24,7 @@
 					<!-- Label + input "Cliente" (input deshabilitado) -->
 					<div class="form-group row">
 						<label for="cliente" class="col-sm-2 col-form-label"
-							th:text="'Cliente'"></label>
+							th:text="#{text.factura.form.cliente}"></label>
 						<div class="col-sm-6">
 							<input
 								th:value="${factura.cliente.nombre} + ' ' + ${factura.cliente.apellido}"
@@ -35,7 +35,7 @@
 					<!-- Label + input "Descripción" -->
 					<div class="form-group row">
 						<label for="descripcion" class="col-sm-2 col-form-label"
-							th:text="'Descripción'"></label>
+							th:text="#{text.cliente.factura.descripcion}"></label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{descripcion}" class="form-control" th:errorclass="'form-control is-invalid'" />
 							<div class="invalid-feedback" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
@@ -44,7 +44,7 @@
 
 					<!-- Label + textarea "Observación" -->
 					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="'Observación'"></label>
+						<label class="col-sm-2 col-form-label" th:text="#{text.factura.form.observacion}"></label>
 						<div class="col-sm-6">
 							<textarea th:field="*{observacion}" class="form-control"></textarea>
 						</div>
@@ -53,7 +53,7 @@
 					<!-- Label + input "buscar_producto (contiene petición asíncrona) -->
 					<div class="form-group row">
 						<label for="buscar_producto" class="col-sm-2 col-form-label"
-							th:text="'Buscar producto'"></label>
+							th:text="#{text.factura.form.buscar}"></label>
 						<div class="col-sm-6">
 							<input type="text" name="buscar_producto" id="buscar_producto"
 								class="form-control" />
@@ -68,18 +68,18 @@
 						class="table table-sm table-striped table-hover">
 						<thead>
 							<tr>
-								<th>Nombre</th>
-								<th>Precio</th>
-								<th>Cantidad</th>
-								<th>Total</th>
-								<th>Eliminar</th>
+								<th th:text="#{text.factura.form.item.nombre}">Nombre</th>
+								<th th:text="#{text.factura.form.item.precio}">Precio</th>
+								<th th:text="#{text.factura.form.item.cantidad}">Cantidad</th>
+								<th th:text="#{text.factura.form.item.total}">Total</th>
+								<th th:text="#{text.factura.form.item.eliminar}">Eliminar</th>
 							</tr>
 						</thead>
 						<tbody>
 						</tbody>
 					</table>
 						<!-- Gran total con valor por defecto en '0' -->
-						<h5>Total <span class="badge badge-secondary" id="gran_total">0</span></h5>
+						<h5><span th:text="#{text.factura.form.total}">Total</span> <span class="badge badge-secondary" id="gran_total">0</span></h5>
 					
 					<!-- Botón "Crear factura" -->
 					<div class="form-group row">
