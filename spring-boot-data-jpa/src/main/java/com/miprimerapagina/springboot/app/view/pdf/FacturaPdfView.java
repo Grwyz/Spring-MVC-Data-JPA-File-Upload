@@ -24,16 +24,18 @@ public class FacturaPdfView extends AbstractPdfView{
 		
 		//Creamos la primera tabla que contendrá los datos del cliente
 		PdfPTable tabla = new PdfPTable(1);
+		tabla.setSpacingAfter(20);
 		tabla.addCell("Datos del Cliente");
 		tabla.addCell(factura.getCliente().getNombre() + " " + factura.getCliente().getApellido());
 		tabla.addCell(factura.getCliente().getEmail());
 		
 		//Creamos la segunda tabla que contendrá los datos de la factura
 		PdfPTable tabla2 = new PdfPTable(1);
-		tabla.addCell("Datos de la Factura");
-		tabla.addCell("Folio: " + factura.getId());
-		tabla.addCell("Descripción: " + factura.getDescripcion());
-		tabla.addCell("Fecha: " + factura.getCreateAt());
+		tabla2.setSpacingAfter(20);
+		tabla2.addCell("Datos de la Factura");
+		tabla2.addCell("Folio: " + factura.getId());
+		tabla2.addCell("Descripción: " + factura.getDescripcion());
+		tabla2.addCell("Fecha: " + factura.getCreateAt());
 		
 		//Agregamos las dos tablas al documento
 		document.add(tabla);
