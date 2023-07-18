@@ -94,6 +94,18 @@
 			<artifactId>spring-oxm</artifactId>
 		</dependency>
 
+		<!-- Solo para JDK 9+ -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		
+		<!-- Solo para JDK 9+ -->
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+		</dependency>
 
 	</dependencies>
 
