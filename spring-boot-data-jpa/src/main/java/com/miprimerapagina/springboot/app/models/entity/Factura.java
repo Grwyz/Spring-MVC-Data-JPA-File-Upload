@@ -20,6 +20,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "facturas")
@@ -87,6 +88,9 @@ public class Factura implements Serializable {
 		this.createAt = createAt;
 	}
 
+	// Anotación para que se omita este atributo en la Serialización
+	// no lo incluirá en el XML
+	@XmlTransient
 	public Cliente getCliente() {
 		return cliente;
 	}

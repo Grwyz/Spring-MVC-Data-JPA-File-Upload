@@ -7,7 +7,7 @@ import com.miprimerapagina.springboot.app.models.entity.Cliente;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="clientes")
+@XmlRootElement(name="clientesList")
 public class ClienteList {
 
 	@XmlElement(name="cliente")
