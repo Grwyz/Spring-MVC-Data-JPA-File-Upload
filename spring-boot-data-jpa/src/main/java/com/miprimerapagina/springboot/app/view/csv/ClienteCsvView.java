@@ -14,7 +14,7 @@ import com.miprimerapagina.springboot.app.models.entity.Cliente;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("listar")
+@Component("listar.csv")
 public class ClienteCsvView extends AbstractView{
 	
 	public ClienteCsvView() {
@@ -39,8 +39,11 @@ public class ClienteCsvView extends AbstractView{
 		ICsvBeanWriter beanWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
 		
 		String[] header = {"id", "nombre", "apellido", "email", "createAt"};
+		
+		// Escribir el header
 		beanWriter.writeHeader(header);
 		
+		// Iterar la lista de clientes
 		for(Cliente cliente : clientes) {
 			beanWriter.write(cliente, header);
 		}
