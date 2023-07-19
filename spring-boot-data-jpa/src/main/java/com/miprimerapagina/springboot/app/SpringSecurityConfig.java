@@ -39,7 +39,7 @@ public class SpringSecurityConfig {
 		try {
 			http.authorizeHttpRequests((authz) -> authz
 					// Todos pueden acceder a la vista principal
-					.requestMatchers("/", "/css/**", "/js/**", "/images/**", "/listar**", "/locale").permitAll()
+					.requestMatchers("/", "/css/**", "/js/**", "/images/**", "/listar**", "/locale", "/api/clientes/**").permitAll()
 					// Cualquier petición deberá ser autenticada
 					.anyRequest().authenticated())
 					// Cualquier persona puede acceder a la vista para iniciar sesión
